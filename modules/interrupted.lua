@@ -11,8 +11,10 @@ local function OnEvent(self, event)
 	local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, school, resisted, blocked, absorbed, critial, glancing, crushing, isOffHand = CombatLogGetCurrentEventInfo()
 
 	if (subevent ~= 'SPELL_INTERRUPT') then return end
+	
+	local inInstance, instanceType = IsInInstance()
 
-	if (UnitExists(sourceName) and UnitIsUnit(sourceName, 'player')) then
+	if (UnitExists(sourceName) and UnitIsUnit(sourceName, 'player') and inInstance and (instanceType == "party" or instanceType == "raid")) then
 		SendChatMessage(UnitName("player")..' interrupted ' .. GetSpellLink(extraSpellID), channel)
 	end
 end
